@@ -188,10 +188,14 @@ public class MyView extends View implements OnTouchListener{
 	}
 	
 	public Bitmap getBitmap(){
+		Bitmap bitmap;
+		this.setDrawingCacheEnabled(true);
 		//this.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 		//this.layout(0, 0, this.getMeasuredWidth(), this.getMeasuredHeight());
 		this.buildDrawingCache();
-		return this.getDrawingCache();
+		bitmap=Bitmap.createBitmap(this.getDrawingCache());
+		this.setDrawingCacheEnabled(false);
+		return bitmap;
 	}
 
 	
