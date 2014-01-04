@@ -172,16 +172,14 @@ public class MyView extends View implements OnTouchListener{
 		String name="jj.png";
 		String sdPath=Environment.getExternalStorageDirectory().getAbsolutePath();
 		try {
-			//BitmapDrawable bitmapDrawable=canvas.
+			this.buildDrawingCache();
 			FileOutputStream stream=new FileOutputStream(sdPath+"/"+name);
 			myBitmap=this.getDrawingCache();
 			myBitmap.compress(CompressFormat.PNG, 100, stream);
 			stream.close();
-			//Toast.makeText(context, "save "+filename, Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			Log.d("System.out","not open");
 			e.printStackTrace();
-			//Toast.makeText(context, "xxx ", Toast.LENGTH_SHORT).show();
 		}
 		
 	}

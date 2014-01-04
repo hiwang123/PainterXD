@@ -220,8 +220,8 @@ public class MainActivity extends Activity {
 					sizeBar.setProgress(25);
 					break;
 				case R.id.button_s:
-					//myView.saveCanvas();
-					String name="jj.png";
+					myView.saveCanvas();
+					/*String name="jj.png";
 					String sdPath=Environment.getExternalStorageDirectory().getAbsolutePath();
 					try {
 						FileOutputStream stream=new FileOutputStream(sdPath+"/"+name);
@@ -231,7 +231,7 @@ public class MainActivity extends Activity {
 						stream.close();
 					} catch (Exception e) {
 						Log.d("System.out","not open");
-					}
+					}  */
 					break;
 				case R.id.button_o:
 					Toast.makeText(context, "o", Toast.LENGTH_SHORT).show();
