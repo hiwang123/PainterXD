@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -39,14 +40,12 @@ public class MyView extends View implements OnTouchListener{
 	private int BgColor;
 	private Bitmap myBitmap;
 	Canvas canvas;
-	Context context;
 	
 	public MyView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		this.setOnTouchListener(this);
-		context=this.context;
 		
 		paths.clear();
 		undopaths.clear();
@@ -168,20 +167,31 @@ public class MyView extends View implements OnTouchListener{
 		paint.setStrokeWidth(CurrSize);
 	}
 	
-	public void saveCanvas(){
-		String name="jj.png";
+	public void saveCanvas(Context context){
+		Date date=new Date();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		String name=sdf.format(date)+".png";
 		String sdPath=Environment.getExternalStorageDirectory().getAbsolutePath();
 		try {
-			this.buildDrawingCache();
 			FileOutputStream stream=new FileOutputStream(sdPath+"/"+name);
-			myBitmap=this.getDrawingCache();
+			
+			myBitmap=getBitmap();
 			myBitmap.compress(CompressFormat.PNG, 100, stream);
+			
+			Toast.makeText(context, "saved "+name, Toast.LENGTH_SHORT).show();
 			stream.close();
 		} catch (Exception e) {
 			Log.d("System.out","not open");
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public Bitmap getBitmap(){
+		//this.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+		//this.layout(0, 0, this.getMeasuredWidth(), this.getMeasuredHeight());
+		this.buildDrawingCache();
+		return this.getDrawingCache();
 	}
 
 	
