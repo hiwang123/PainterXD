@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 	SeekBar sizeBar;
 	ImageView set,eraser,undo,redo,bgColor;
 	EditText sendTo;
+	AlertDialog dialog;
 	
 	Display display;
 	
@@ -114,11 +115,11 @@ public class MainActivity extends Activity {
 			switch(view.getId()){
 			case R.id.imageView1:
 				SetDialog builder = new SetDialog(MainActivity.this); 
-				AlertDialog dialog=builder.create();
+				dialog=builder.create();
 				dialog.show();
 				break;
 			case R.id.imageView2:
-				myView.setColor(Color.WHITE);
+				myView.setEraseColor();
 				break;
 			case R.id.imageView3:
 				myView.undo();
@@ -171,7 +172,6 @@ public class MainActivity extends Activity {
 	}
 	
 	public class SetDialog extends AlertDialog.Builder {
-
 		public SetDialog(Context context) {
 			super(context);
 			LayoutInflater factory=LayoutInflater.from(MainActivity.this);
@@ -218,6 +218,7 @@ public class MainActivity extends Activity {
 					myView.clearAll();
 					bgColor.setBackgroundColor(Color.WHITE);
 					sizeBar.setProgress(25);
+					dialog.dismiss();
 					break;
 				case R.id.button_s:
 					myView.saveCanvas(context);
@@ -238,7 +239,6 @@ public class MainActivity extends Activity {
 			
 		}
 		
-
 	}
 
 }

@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.R.integer;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Canvas;
@@ -18,8 +20,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor.FileDescriptorDetachedException;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -142,6 +146,10 @@ public class MyView extends View implements OnTouchListener{
 		CurrSize=size;
 	}
 	
+	public void setEraseColor(){
+		CurrColor=BgColor;
+	}
+	
 	public void setBGColor(int color){
 		BgColor=color;
 		invalidate();
@@ -171,13 +179,22 @@ public class MyView extends View implements OnTouchListener{
 		Date date=new Date();
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		String name=sdf.format(date)+".png";
-		String sdPath=Environment.getExternalStorageDirectory().getAbsolutePath();
+		String sdPath=Environment.getExternalStorageDirectory().getAbsolutePath()+"/PainterXD";
+		
+		//check file existence
+		File file=new File(sdPath);
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		
 		try {
 			FileOutputStream stream=new FileOutputStream(sdPath+"/"+name);
 			
 			myBitmap=getBitmap();
 			myBitmap.compress(CompressFormat.PNG, 100, stream);
-			
+
+			context.sendBroadcast(new 
+					Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"+file.getAbsolutePath()+"/"+name)));
 			Toast.makeText(context, "saved "+name, Toast.LENGTH_SHORT).show();
 			stream.close();
 		} catch (Exception e) {
@@ -197,7 +214,5 @@ public class MyView extends View implements OnTouchListener{
 		this.setDrawingCacheEnabled(false);
 		return bitmap;
 	}
-
-	
 
 }
