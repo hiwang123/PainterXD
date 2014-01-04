@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="rgb_array">
+        <item>ff000000</item>
+        <item>ff444444</item>
+        <item>ff888888</item>
+        <item>ffcccccc</item>
+        <item>ffffffff</item>
+        <item>fffff68f</item>
+        <item>ffffd700</item>
+        <item>ffffa500</item>
+        <item>ffff0000</item>
+        <item>ffff1493</item>
+        <item>ffff69b4</item>
+        <item>ffffc0cb</item>
+        <item>ffdda0dd</item>
+        <item>ffba55d3</item>
+        <item>ff9400d3</item>
+        <item>ff0000ff</item>
+        <item>ff4876ff</item>
+        <item>ff63b8ff</item>
+        <item>ffc6e2ff</item>
+        <item>ff98fb98</item>
+        <item>ff00ff00</item>
+        <item>ff32cd32</item>
+        <item>ff228b22</item>
+        <item>ff8b7500</item>
+        <item>ff8b4513</item>
+    </string-array>
+</resources>
