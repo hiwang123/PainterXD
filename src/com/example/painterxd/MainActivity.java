@@ -6,13 +6,17 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.animation.AnimatorSet.Builder;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification.Action;
 import android.content.Context;
+import android.content.Intent;
 import android.gesture.Gesture;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
@@ -39,6 +43,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -68,6 +73,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context=this;
+		display=getWindowManager().getDefaultDisplay();
 		
 		set=(ImageView) findViewById(R.id.imageView1);
 		eraser=(ImageView) findViewById(R.id.imageView2);
@@ -78,13 +84,16 @@ public class MainActivity extends Activity {
 		myView=(MyView) findViewById(R.id.myView1);
 		
 		rgbs=Arrays.asList(getResources().getStringArray(R.array.rgb_array));
-		display=getWindowManager().getDefaultDisplay();
 		
 		ColorIni(); 
 		set.setOnClickListener(new MyOnClickListener());
+		set.setOnTouchListener(new MyOnTouchListener());
 		eraser.setOnClickListener(new MyOnClickListener());
+		eraser.setOnTouchListener(new MyOnTouchListener());
 		undo.setOnClickListener(new MyOnClickListener());
+		undo.setOnTouchListener(new MyOnTouchListener());
 		redo.setOnClickListener(new MyOnClickListener());
+		redo.setOnTouchListener(new MyOnTouchListener());
 		sizeBar.setOnSeekBarChangeListener(new MyOnSeekBarChangeListener());
 		sizeBar.setProgress(25);
 		
@@ -105,6 +114,35 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	public class MyOnTouchListener implements OnTouchListener{
+
+		@Override
+		public boolean onTouch(View view, MotionEvent event) {
+			switch(event.getAction()){
+			case MotionEvent.ACTION_DOWN:
+				switch(view.getId()){
+				case R.id.imageView1:
+					view.setBackgroundColor(Color.rgb(175, 238, 238));
+					break;
+				case R.id.imageView2:
+					view.setBackgroundColor(Color.rgb(175, 238, 238));
+					break;
+				case R.id.imageView3:
+					view.setBackgroundColor(Color.rgb(175, 238, 238));
+					break;
+				case R.id.imageView4:
+					view.setBackgroundColor(Color.rgb(175, 238, 238));
+					break;
+				}
+			break;
+			case MotionEvent.ACTION_UP:
+				view.setBackgroundColor(Color.argb(00, 00, 00, 00));
+			break;
+			}
+			return false;
+		}
 	}
 	
 	public class MyOnClickListener implements OnClickListener{
@@ -192,6 +230,8 @@ public class MainActivity extends Activity {
 			view.setMinimumWidth((int) (display.getWidth()));
 			this.setView(view);
 			
+			bgColor.setBackgroundColor(myView.getBGColor());
+			
 			newBtn.setOnClickListener(new MyOnClickListenerF());
 			saveBtn.setOnClickListener(new MyOnClickListenerF());
 			openBtn.setOnClickListener(new MyOnClickListenerF());
@@ -216,7 +256,7 @@ public class MainActivity extends Activity {
 				switch(view.getId()){
 				case R.id.button_n:
 					myView.clearAll();
-					bgColor.setBackgroundColor(Color.WHITE);
+					myView.setBGColor(myView.getBGColor());
 					sizeBar.setProgress(25);
 					dialog.dismiss();
 					break;
@@ -224,7 +264,15 @@ public class MainActivity extends Activity {
 					myView.saveCanvas(context);
 					break;
 				case R.id.button_o:
-					Toast.makeText(context, "o", Toast.LENGTH_SHORT).show();
+					myView.clearAll();
+					myView.setBGColor(myView.getBGColor());
+					sizeBar.setProgress(25);
+					
+					Intent intent = new Intent(Intent.ACTION_PICK, 
+							android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+					startActivityForResult(intent, view.getId());
+					
+					dialog.dismiss();
 					break;
 				case R.id.button_t:
 					Toast.makeText(context, "t", Toast.LENGTH_SHORT).show();
@@ -240,5 +288,15 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Uri SelectedImageUri=data.getData();
+		//String selectedImagePath=SelectedImageUri.getPath();
+		//Toast.makeText(context, "get", Toast.LENGTH_SHORT).show();
+		//path ¤£§¹¾ã
+		myView.drawBitmap(SelectedImageUri,context);
+	}
+	
 
 }

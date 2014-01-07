@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -42,7 +44,8 @@ public class MyView extends View implements OnTouchListener{
 	private int CurrColor;
 	private int CurrSize;
 	private int BgColor;
-	private Bitmap myBitmap;
+	private Bitmap saveBitmap;
+	private Bitmap openBitmap;
 	Canvas canvas;
 	
 	public MyView(Context context, AttributeSet attrs) {
@@ -70,6 +73,11 @@ public class MyView extends View implements OnTouchListener{
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(BgColor);
+		
+		if(openBitmap!=null){
+			canvas.drawBitmap(openBitmap, 0, 0, null);
+		}
+		
 		for(Pair<Path, Paint> p: paths){
 			canvas.drawPath(p.first, p.second);
 		}
@@ -154,12 +162,29 @@ public class MyView extends View implements OnTouchListener{
 		BgColor=color;
 		invalidate();
 	}
+	
+	public int getBGColor(){
+		return BgColor;
+	}
+	
+	public void drawBitmap(Uri SelectedImageUri,Context context){
+		try {
+			InputStream is=context.getContentResolver().openInputStream(SelectedImageUri);
+			openBitmap=BitmapFactory.decodeStream(is);
+			is.close();
+		} catch (Exception e) {
+			Log.d("System.out","no stream");
+			e.printStackTrace();
+		}
+		invalidate();
+	}
+	
 	public void clearAll(){
 		paths.clear();
 		undopaths.clear();
+		openBitmap=null;
 		
 		CurrColor=Color.BLACK;
-		BgColor=Color.WHITE;
 		CurrSize=7;
 
 		invalidate();
@@ -190,8 +215,8 @@ public class MyView extends View implements OnTouchListener{
 		try {
 			FileOutputStream stream=new FileOutputStream(sdPath+"/"+name);
 			
-			myBitmap=getBitmap();
-			myBitmap.compress(CompressFormat.PNG, 100, stream);
+			saveBitmap=getBitmap();
+			saveBitmap.compress(CompressFormat.PNG, 100, stream);
 
 			context.sendBroadcast(new 
 					Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"+file.getAbsolutePath()+"/"+name)));
