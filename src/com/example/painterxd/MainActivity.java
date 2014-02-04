@@ -44,11 +44,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
@@ -61,10 +65,12 @@ public class MainActivity extends Activity {
 	Context context;
 	MyView myView;
 	View view;
-	SeekBar sizeBar;
-	ImageView set,eraser,undo,redo,bgColor;
+	ImageButton set,eraser,undo,redo;
+	Spinner eraserSize;
+	ImageView bgColor;
 	EditText sendTo;
 	AlertDialog dialog;
+	MyAdapter adapter;
 	
 	Display display;
 	
@@ -75,28 +81,45 @@ public class MainActivity extends Activity {
 		context=this;
 		display=getWindowManager().getDefaultDisplay();
 		
-		set=(ImageView) findViewById(R.id.imageView1);
-		eraser=(ImageView) findViewById(R.id.imageView2);
-		undo=(ImageView) findViewById(R.id.imageView3);
-		redo=(ImageView) findViewById(R.id.imageView4);
+		set=(ImageButton) findViewById(R.id.imageSet);
+		eraser=(ImageButton) findViewById(R.id.imageButton1);
+		undo=(ImageButton) findViewById(R.id.imageButton2);
+		redo=(ImageButton) findViewById(R.id.imageButton3);
 		colorBar=(LinearLayout) findViewById(R.id.colorLayout);
-		sizeBar=(SeekBar) findViewById(R.id.seekBar1);
 		myView=(MyView) findViewById(R.id.myView1);
+		eraserSize=(Spinner) findViewById(R.id.spinner1);
+		List<Item> list = new ArrayList<Item>();
+		list.add(new Item(4,R.drawable.size5));
+		list.add(new Item(7,R.drawable.size4));
+		list.add(new Item(10,R.drawable.size3));
+		list.add(new Item(15,R.drawable.size2));
+		list.add(new Item(22,R.drawable.size1));
+		
+		adapter = new MyAdapter(context, list);
+		eraserSize.setAdapter(adapter);
+		
+		eraserSize.setOnItemSelectedListener(new MyOnItemSelectedListener());
 		
 		rgbs=Arrays.asList(getResources().getStringArray(R.array.rgb_array));
 		
 		ColorIni(); 
 		set.setOnClickListener(new MyOnClickListener());
-		set.setOnTouchListener(new MyOnTouchListener());
 		eraser.setOnClickListener(new MyOnClickListener());
-		eraser.setOnTouchListener(new MyOnTouchListener());
 		undo.setOnClickListener(new MyOnClickListener());
-		undo.setOnTouchListener(new MyOnTouchListener());
 		redo.setOnClickListener(new MyOnClickListener());
-		redo.setOnTouchListener(new MyOnTouchListener());
-		sizeBar.setOnSeekBarChangeListener(new MyOnSeekBarChangeListener());
-		sizeBar.setProgress(25);
 		
+	}
+	// Spinner OnItemSelectedListener 監聽器
+	private class MyOnItemSelectedListener implements OnItemSelectedListener {
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+			Item item = (Item)view.getTag();
+			myView.setSize(item.getSize());
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> arg0) {
+		}
 	}
 	
 	public void ColorIni(){
@@ -116,53 +139,24 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	public class MyOnTouchListener implements OnTouchListener{
-
-		@Override
-		public boolean onTouch(View view, MotionEvent event) {
-			switch(event.getAction()){
-			case MotionEvent.ACTION_DOWN:
-				switch(view.getId()){
-				case R.id.imageView1:
-					view.setBackgroundColor(Color.rgb(175, 238, 238));
-					break;
-				case R.id.imageView2:
-					view.setBackgroundColor(Color.rgb(175, 238, 238));
-					break;
-				case R.id.imageView3:
-					view.setBackgroundColor(Color.rgb(175, 238, 238));
-					break;
-				case R.id.imageView4:
-					view.setBackgroundColor(Color.rgb(175, 238, 238));
-					break;
-				}
-			break;
-			case MotionEvent.ACTION_UP:
-				view.setBackgroundColor(Color.argb(00, 00, 00, 00));
-			break;
-			}
-			return false;
-		}
-	}
-	
 	public class MyOnClickListener implements OnClickListener{
 
 		@Override
 		public void onClick(View view) {
 			//Toast.makeText(context, "ll", Toast.LENGTH_SHORT).show();
 			switch(view.getId()){
-			case R.id.imageView1:
+			case R.id.imageSet:
 				SetDialog builder = new SetDialog(MainActivity.this); 
 				dialog=builder.create();
 				dialog.show();
 				break;
-			case R.id.imageView2:
+			case R.id.imageButton1:
 				myView.setEraseColor();
 				break;
-			case R.id.imageView3:
+			case R.id.imageButton2:
 				myView.undo();
 				break;
-			case R.id.imageView4:
+			case R.id.imageButton3:
 				myView.redo();
 				break;
 			default:
@@ -174,40 +168,6 @@ public class MainActivity extends Activity {
 		
 	}   
 	
-	public class MyOnSeekBarChangeListener implements OnSeekBarChangeListener{
-
-		@Override
-		public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void onStopTrackingTouch(SeekBar seekbar) {
-			int seekProgress = seekbar.getProgress();  
-	        if(seekProgress<13){  
-	            sizeBar.setProgress(0);  
-	            myView.setSize(4);
-	        }else if(seekProgress>=13 && seekProgress<38){  
-	        	sizeBar.setProgress(25);  
-	        	myView.setSize(7);
-	        }else if(seekProgress>=38 && seekProgress<63){  
-	        	sizeBar.setProgress(50); 
-	        	myView.setSize(12);
-	        }else if(seekProgress>=63 && seekProgress<88){  
-	        	sizeBar.setProgress(75);  
-	        	myView.setSize(17);
-	        }else if(seekProgress>=88){  
-	        	sizeBar.setProgress(100);  
-	        	myView.setSize(22);
-	        }
-		}
-		
-	}
 	
 	public class SetDialog extends AlertDialog.Builder {
 		public SetDialog(Context context) {
@@ -257,7 +217,6 @@ public class MainActivity extends Activity {
 				case R.id.button_n:
 					myView.clearAll();
 					myView.setBGColor(myView.getBGColor());
-					sizeBar.setProgress(25);
 					dialog.dismiss();
 					break;
 				case R.id.button_s:
@@ -266,7 +225,6 @@ public class MainActivity extends Activity {
 				case R.id.button_o:
 					myView.clearAll();
 					myView.setBGColor(myView.getBGColor());
-					sizeBar.setProgress(25);
 					
 					Intent intent = new Intent(Intent.ACTION_PICK, 
 							android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -292,11 +250,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Uri SelectedImageUri=data.getData();
-		//String selectedImagePath=SelectedImageUri.getPath();
-		//Toast.makeText(context, "get", Toast.LENGTH_SHORT).show();
-		//path 不完整
 		myView.drawBitmap(SelectedImageUri,context);
 	}
-	
 
 }

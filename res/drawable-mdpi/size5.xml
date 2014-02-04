@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape 
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:shape="oval"
+>
+        
+    <!-- 框內底部顏色 -->
+    <solid 
+    android:color="@android:color/black" 
+    />
+       
+    <!-- 尺寸大小 -->
+    <size
+    android:width="4dip"
+    android:height="4dip"
+    />
+        
+</shape>

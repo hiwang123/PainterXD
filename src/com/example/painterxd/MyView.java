@@ -21,6 +21,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 public class MyView extends View implements OnTouchListener{
 
+	private int canvasW,canvasH,bitmapW,bitmapH;
 	private float preX,preY;
 	private ArrayList<Pair<Path, Paint>> paths=new ArrayList<Pair<Path, Paint>>();
 	private ArrayList<Pair<Path, Paint>> undopaths=new ArrayList<Pair<Path, Paint>>();
@@ -71,11 +73,35 @@ public class MyView extends View implements OnTouchListener{
 	}
 	
 	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		canvasW=w;
+		canvasH=h;
+	}
+
+	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(BgColor);
-		
 		if(openBitmap!=null){
-			canvas.drawBitmap(openBitmap, 0, 0, null);
+			bitmapW=openBitmap.getWidth();
+			bitmapH=openBitmap.getHeight();
+			int left,top,right,bottom;
+			double ww=(double)canvasW/bitmapW;
+			double hh=(double)canvasH/bitmapH;
+			if(ww<hh){
+			    left=0;
+				top=Math.max((canvasH-(int) (bitmapH*ww))/2,0);
+				right=canvasW;
+				bottom=(int) (top+bitmapH*ww);
+			}
+			else {
+				left=Math.max((canvasW-(int)(bitmapW*hh))/2,0);
+				top=0;
+				right=(int) (left+bitmapW*hh);
+				bottom=canvasH;
+			}    
+			Rect rect=new Rect(left, top, right, bottom);
+			canvas.drawBitmap(openBitmap, null,rect, null);
 		}
 		
 		for(Pair<Path, Paint> p: paths){

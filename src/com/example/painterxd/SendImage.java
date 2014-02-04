@@ -3,7 +3,7 @@ package com.example.painterxd;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class OpenImage extends Activity {
+public class SendImage extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

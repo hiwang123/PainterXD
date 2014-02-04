@@ -10,46 +10,46 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <LinearLayout
+   <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d3d3d3" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <ImageButton
+            android:id="@+id/imageSet"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/set" />
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/eraser" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/undo" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/redo" />
 
-        <SeekBar
-            android:id="@+id/seekBar1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:progressDrawable="@drawable/seekbar_progress"
-            android:thumb="@drawable/seekbar_thumb"  
-            android:maxHeight="5dp"
-            android:layout_gravity="center"
-            android:layout_weight="1" />
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:spinnerMode="dropdown" />
 
     </LinearLayout>
 
@@ -62,7 +62,9 @@
             android:id="@+id/colorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal" />
+            android:orientation="horizontal" >
+
+        </LinearLayout>
     </HorizontalScrollView>
 
     <com.example.painterxd.MyView
