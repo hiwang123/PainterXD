@@ -74,6 +74,8 @@ public class MainActivity extends Activity {
 	
 	Display display;
 	
+	final int SELECT_PIC=1;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -151,7 +153,7 @@ public class MainActivity extends Activity {
 				dialog.show();
 				break;
 			case R.id.imageButton1:
-				myView.setEraseColor();
+				myView.setErase();
 				break;
 			case R.id.imageButton2:
 				myView.undo();
@@ -162,6 +164,7 @@ public class MainActivity extends Activity {
 			default:
 				ColorDrawable drawable=  (ColorDrawable) view.getBackground();
 				int color=drawable.getColor();
+				myView.clsErase();
 				myView.setColor(color);	
 			}
 		}
@@ -228,12 +231,14 @@ public class MainActivity extends Activity {
 					
 					Intent intent = new Intent(Intent.ACTION_PICK, 
 							android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-					startActivityForResult(intent, view.getId());
+					startActivityForResult(intent, SELECT_PIC);
 					
 					dialog.dismiss();
 					break;
 				case R.id.button_t:
 					Toast.makeText(context, "t", Toast.LENGTH_SHORT).show();
+					break;
+				case R.id.editText1:
 					break;
 				default:
 					ColorDrawable drawable=  (ColorDrawable) view.getBackground();
@@ -249,8 +254,10 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Uri SelectedImageUri=data.getData();
-		myView.drawBitmap(SelectedImageUri,context);
+		if(requestCode==SELECT_PIC&&resultCode==RESULT_OK){
+			Uri SelectedImageUri=data.getData();
+			myView.drawBitmap(SelectedImageUri,context);
+		}
 	}
 
 }

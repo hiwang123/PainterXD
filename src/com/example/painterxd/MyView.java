@@ -48,6 +48,7 @@ public class MyView extends View implements OnTouchListener{
 	private int BgColor;
 	private Bitmap saveBitmap;
 	private Bitmap openBitmap;
+	private int eraser=0;
 	Canvas canvas;
 	
 	public MyView(Context context, AttributeSet attrs) {
@@ -180,8 +181,12 @@ public class MyView extends View implements OnTouchListener{
 		CurrSize=size;
 	}
 	
-	public void setEraseColor(){
-		CurrColor=BgColor;
+	public void setErase(){
+		eraser=1;
+	}
+	
+	public void clsErase(){
+		eraser=0;
 	}
 	
 	public void setBGColor(int color){
